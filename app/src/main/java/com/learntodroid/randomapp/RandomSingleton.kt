@@ -50,7 +50,6 @@ object RandomSingleton {
      * @return A list of random numbers
      */
     fun listOfRandomNumbers(size: Int, from: Int, to: Int) : List<Int> {
-        var randomNumbers  = (0 until size).map { (from .. to).random() }
-        return randomNumbers;
+        return (0 until size).map { (from .. to).random() };
     }
 }
