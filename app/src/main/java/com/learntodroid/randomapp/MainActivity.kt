@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -38,6 +37,7 @@ class MainActivity : ComponentActivity() {
                     Column {
                         RandomWholeNumber(0, 1)
                         RandomDecimal(0.001, 19.013);
+                        RandomList(10, 0, 5);
                         DiceRoll()
                         CoinFlip()
                         ShuffleDraw();
@@ -69,7 +69,7 @@ fun RandomWholeNumber(from: Int, to: Int) {
         Text(text = "RandomWholeNumber: $randomNumber")
         Button(onClick = {
             randomNumber = RandomSingleton.randomInteger(from, to);
-            Toast.makeText(context, "You got a $randomNumber", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "You got $randomNumber", Toast.LENGTH_SHORT).show()
         }) {
             Text(text = "Randomize")
         }
@@ -90,6 +90,7 @@ fun RandomDecimal(from: Double, until: Double) {
         Button(onClick = {
             randomNumber = RandomSingleton.randomDouble(from, until);
             Toast.makeText(context, "You got a $randomNumber", Toast.LENGTH_SHORT).show()
+            var r = (1..10).random()
         }) {
             Text(text = "Randomize")
         }
@@ -97,8 +98,30 @@ fun RandomDecimal(from: Double, until: Double) {
 }
 
 @Composable
+fun RandomList(size: Int, from: Int, to: Int) {
+    var randomNumbers by remember { mutableStateOf(RandomSingleton.listOfRandomNumbers(size, from, to)) }
+    var context = LocalContext.current;
+
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(8.dp, 8.dp, 8.dp, 0.dp).border(BorderStroke(1.dp,Color.Black)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(text = "RandomNumbers: $randomNumbers")
+        Button(onClick = {
+            randomNumbers = RandomSingleton.listOfRandomNumbers(size, from, to);
+            Toast.makeText(context, "You got a $randomNumbers", Toast.LENGTH_SHORT).show()
+            var r = (1..10).random()
+        }) {
+            Text(text = "Randomize")
+        }
+    }
+}
+
+var diceRollNumber = 1
+
+@Composable
 fun DiceRoll() {
-    var randomNumber by remember { mutableStateOf(RandomSingleton.randomInteger(1, 6)) }
+    var randomNumber by remember { mutableStateOf(diceRollNumber) }
     var context = LocalContext.current;
 
     Column(
@@ -107,7 +130,8 @@ fun DiceRoll() {
     ) {
         Text(text = "DiceRoll: $randomNumber")
         Button(onClick = {
-            randomNumber = RandomSingleton.randomInteger(1, 6);
+            diceRollNumber = RandomSingleton.randomInteger(1, 6);
+            randomNumber = diceRollNumber;
             Toast.makeText(context, "You rolled a $randomNumber", Toast.LENGTH_SHORT).show()
         }) {
             Text(text = "Roll")
